@@ -9,7 +9,7 @@ export const NavBar:FC = () => {
         <IconButton size={'large'} edge={'start'}>
           <MenuOutlined/>
         </IconButton>
-        <Typography variant={'h6'}>Opne Jira</Typography>
+        <Typography variant={'h6'}>OpenJira</Typography>
       </Toolbar>
     </AppBar>
   );

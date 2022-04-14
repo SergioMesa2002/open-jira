@@ -4,9 +4,9 @@ import { Layout } from '../components/layouts';
 
 const HomePage: NextPage = () => {
   return (
-    <Layout title={'open-jira'}>
-      <Typography variant={'h1'} color={'primary'}>Hola Mundo</Typography>
-    </Layout>
+      <Layout title={'open-jira'}>
+        <Typography variant={'h1'} color={'primary'}>Hola Mundo</Typography>
+      </Layout>
   );
 };
 
