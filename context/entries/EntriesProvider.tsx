@@ -21,7 +21,7 @@ const UI_initial_state: EntriesState = {
       _id: uuidv4(),
       description: 'In-Progress: se distraerá con el contenido del texto de un sitio mientras que mira su diseño.',
       status: 'in-progress',
-      createAt: Date.now()-1000000,
+      createAt: Date.now() - 1000000,
     },
     {
       _id: uuidv4(),
@@ -37,9 +37,23 @@ export const EntriesProvider: FC = ({ children }) => {
 
   const [state, dispatch] = useReducer(entriesReducer, UI_initial_state);
 
+  const addNewEntry = (description: string) => {
+    const newEntry: Entry = {
+      _id: uuidv4(),
+      status: 'pending',
+      createAt: Date.now(),
+      description,
+    };
+
+    dispatch({ type: '[Entry] Add-Entry', payload: newEntry });
+
+  };
+
   return (
     <EntriesContext.Provider value={{
       ...state,
+
+      addNewEntry
     }}>
       {children}
     </EntriesContext.Provider>
