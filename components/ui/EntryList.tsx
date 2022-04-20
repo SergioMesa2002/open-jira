@@ -1,7 +1,7 @@
 import { List, Paper } from '@mui/material';
 import { EntryCard } from './EntryCard';
 import { EntryStatus } from '../../interfaces';
-import { FC, useContext, useMemo } from 'react';
+import { FC, DragEvent, useContext, useMemo } from 'react';
 import { EntriesContext } from '../../context/entries';
 
 interface EntryListProps {
@@ -17,9 +17,21 @@ export const EntryList: FC<EntryListProps> = ({ status }) => {
     )
   ;
 
+  const allowDrop = (event: DragEvent<HTMLDivElement>) => {
+    event.preventDefault();
+
+  };
+
+  const onDropEntry = (event: DragEvent<HTMLDivElement>) => {
+    const id = event.dataTransfer.getData('text');
+  };
+
   return (
     //TODO: set drop
-    <div>
+    <div
+      onDrop={onDropEntry}
+      onDragOver={allowDrop}
+    >
       <Paper sx={{
         height: 'calc(100vh - 250px)', overflow: 'scroll',
         backgroundColor: 'transparent',
