@@ -4,11 +4,13 @@ import {
 } from '@mui/icons-material';
 import { ChangeEvent, useContext, useState } from 'react';
 import { EntriesContext } from '../../context/entries';
+import { UIContext } from '../../context/ui';
 
 export const NewEntry = () => {
 
   const { addNewEntry } = useContext(EntriesContext);
-  const [isAdding, setIsAdding] = useState(false);
+  const { setIsAddingEntry, isAddingEntry } = useContext(UIContext);
+
   const [inputValue, setInputValue] = useState('');
   const [touched, setTouched] = useState(false);
 
@@ -19,7 +21,7 @@ export const NewEntry = () => {
   const onSave = () => {
     if (inputValue.length === 0) return;
     addNewEntry(inputValue);
-    setIsAdding(false);
+    setIsAddingEntry(false);
     setTouched(false);
     setInputValue('');
   };
@@ -28,7 +30,7 @@ export const NewEntry = () => {
     <Box sx={{ marginBottom: 2, paddingX: 2 }}>
 
       {
-        isAdding
+        isAddingEntry
         ? (
           <>
             <TextField
@@ -51,7 +53,7 @@ export const NewEntry = () => {
               <Button
                 variant={'text'}
                 onClick={() => {
-                  setIsAdding(false);
+                  setIsAddingEntry(false);
                 }}
               >
                 Cancel
@@ -73,7 +75,7 @@ export const NewEntry = () => {
             fullWidth
             startIcon={<AddCircleOutlineOutlined/>}
             onClick={() => {
-              setIsAdding(true);
+              setIsAddingEntry(true);
             }}
           >
             Add Task
