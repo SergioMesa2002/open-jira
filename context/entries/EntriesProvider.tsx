@@ -13,19 +13,19 @@ const UI_initial_state: EntriesState = {
   entries: [
     {
       _id: uuidv4(),
-      description: 'Es un hecho establecido hace demasiado tiempo que un lector se distraerá con el contenido del texto de un sitio mientras que mira su diseño.',
+      description: 'Pending: Es un hecho establecido hace demasiado tiempo que un lector se distraerá con el contenido del texto de un sitio mientras que mira su diseño.',
       status: 'pending',
       createAt: Date.now(),
     },
     {
       _id: uuidv4(),
-      description: ' se distraerá con el contenido del texto de un sitio mientras que mira su diseño.',
+      description: 'In-Progress: se distraerá con el contenido del texto de un sitio mientras que mira su diseño.',
       status: 'in-progress',
       createAt: Date.now()-1000000,
     },
     {
       _id: uuidv4(),
-      description: 'Es un hecho establecido hace demasiado tiempo que un lector.',
+      description: 'Finished: Es un hecho establecido hace demasiado tiempo que un lector.',
       status: 'finished',
       createAt: Date.now() - 100000,
     }
@@ -40,7 +40,6 @@ export const EntriesProvider: FC = ({ children }) => {
   return (
     <EntriesContext.Provider value={{
       ...state,
-      entries: []
     }}>
       {children}
     </EntriesContext.Provider>
