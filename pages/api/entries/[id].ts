@@ -4,63 +4,81 @@ import { db } from '../../../database';
 import { Data } from './index';
 import mongoose from 'mongoose';
 
-export const handler = async (
+export default function handler(req: NextApiRequest, res: NextApiResponse<Data>) {
+
+  // const { id } = req.query;
+
+  // if ( !mongoose.isValidObjectId( id ) ) {
+  //     return res.status(400).json({ message: 'El id no es válido ' + id })
+  // }
+
+  switch ( req.method ) {
+    case 'PUT':
+      return updateEntry( req, res );
+
+    case 'GET':
+      return getEntry( req, res );
+
+    default:
+      return res.status(400).json({ message: 'Método no existe ' + req.method });
+  }
+
+}
+
+const getEntry = async (
   req: NextApiRequest,
   res: NextApiResponse<Data>) => {
 
-  const { id = '' } = req.query;
+  const { id } = req.query;
 
-  if (!mongoose.isValidObjectId(id)) {
-    return res.status(400).json({
-      message: 'id isnt valid'
-    });
+  await db.connect();
+
+  const entry = await Entry.findById( id );
+
+  if ( !entry ) {
+    await db.disconnect();
+    return res.status(400).json({ message: 'No hay entrada con ese ID: ' + id })
   }
 
-  switch (req.method) {
-    case 'PUT':
-      return updateEntry(req, res);
-    default:
-      return res.status(400).json({
-        message: 'doesnt method'
-      });
+  try {
+    await db.disconnect();
+    res.status(200).json( entry! );
+
+  } catch (error: any) {
+    await db.disconnect();
+    res.status(400).json({ message: error.errors.status.message });
   }
+
 };
-
 
 const updateEntry = async (
   req: NextApiRequest,
   res: NextApiResponse<Data>) => {
 
-  const { id = '' } = req.query;
+  const { id } = req.query;
+
+  await db.connect();
+
+  const entryToUpdate = await Entry.findById( id );
+
+  if ( !entryToUpdate ) {
+    await db.disconnect();
+    return res.status(400).json({ message: 'No hay entrada con ese ID: ' + id })
+  }
+
+  const {
+    description = entryToUpdate.description,
+    status = entryToUpdate.status,
+  } = req.body;
 
   try {
-    await db.connect();
-
-    const entryToUpdate = await Entry.findById(id);
-
-    if (!entryToUpdate) {
-      return res.status(400).json({
-        message: 'there isnt Entry with these id' + id
-      });
-    }
-
-    const {
-      description = entryToUpdate.description,
-      status = entryToUpdate.status
-    } = req.body;
-
-    const updatedEntry =
-      await Entry.findByIdAndUpdate(id, { description, status },
-        { runValidators: true, new: true });
-
+    const updatedEntry = await Entry.findByIdAndUpdate( id, { description, status }, { runValidators: true, new: true });
     await db.disconnect();
-    return res.status(200).json(updatedEntry!);
-  } catch (e) {
+    res.status(200).json( updatedEntry! );
+
+  } catch (error: any) {
     await db.disconnect();
-    console.log(e);
-    return res.status(500).json({
-      message: 'test server console'
-    });
+    res.status(400).json({ message: error.errors.status.message });
   }
 
 };
