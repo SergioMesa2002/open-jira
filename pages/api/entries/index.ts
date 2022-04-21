@@ -4,7 +4,7 @@ import { db } from '../../../database';
 import { Entry, IEntry } from '../../../models/';
 
 
-type Data =
+export type Data =
   | { message: string }
   | IEntry[]
   | IEntry
