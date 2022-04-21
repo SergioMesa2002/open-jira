@@ -2,6 +2,8 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 
 import { db } from '../../database';
+import Entry from '../../models/Entry';
+import { seedData } from '../../database/seed-data';
 
 type Data = {
   message: string
@@ -18,6 +20,10 @@ export default async function handler(
   }
 
   await db.connect();
+
+  await Entry.deleteMany();
+  await Entry.insertMany(seedData.entries);
+
 
   await db.disconnect();
 
