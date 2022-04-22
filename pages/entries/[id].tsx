@@ -1,4 +1,4 @@
-import { ChangeEvent, FC, useMemo, useState } from 'react';
+import { ChangeEvent, FC, useContext, useMemo, useState } from 'react';
 import {
   Button, capitalize,
   Card, CardActions, CardContent, CardHeader, FormControl, FormControlLabel,
@@ -11,20 +11,24 @@ import { Layout } from '../../components/layouts';
 import { DeleteOutline, SaveOutlined } from '@mui/icons-material';
 import { EntryStatus } from '../../interfaces';
 import { dbEntries } from '../../database';
-import { Entry } from '../../models';
+import { IEntry } from '../../models';
+import { EntriesContext } from '../../context/entries';
+import { dateFunctions } from '../../utils';
 
 
 const validStatus: EntryStatus[] = ['pending', 'in-progress', 'finished'];
 
 interface Props {
-  entry: Entry;
+  entry: IEntry;
 }
 
 
-const EntryPage: FC<Props> = (props) => {
+const EntryPage: FC<Props> = ({ entry }) => {
 
-  const [inputValue, setInputValue] = useState('');
-  const [status, setStatus] = useState<EntryStatus>('pending');
+  const { updateEntry } = useContext(EntriesContext);
+
+  const [inputValue, setInputValue] = useState(entry.description);
+  const [status, setStatus] = useState<EntryStatus>(entry.status);
   const [touched, setTouched] = useState(false);
 
   const isNotValid = useMemo(() => inputValue.length <= 0 && touched,
@@ -39,12 +43,19 @@ const EntryPage: FC<Props> = (props) => {
   };
 
   const onSave = () => {
+    if (inputValue.trim().length === 0) return;
 
+    const updatedEntry: IEntry = {
+      ...entry,
+      status,
+      description: inputValue
+    };
+    updateEntry(updatedEntry,true);
   };
 
 
   return (
-    <Layout title={'....'}>
+    <Layout title={inputValue.substring(0, 20) + '...'}>
       <Grid
         container
         justifyContent={'center'}
@@ -58,7 +69,7 @@ const EntryPage: FC<Props> = (props) => {
         >
           <Card>
             <CardHeader title={`Entry: ${inputValue}`}
-                        subheader={'created 3 minutes ago'}/>
+                        subheader={`created ${dateFunctions.getFormatDistanceToNow(entry.createdAt)}`}/>
 
             <CardContent>
               <TextField

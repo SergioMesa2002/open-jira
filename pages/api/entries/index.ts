@@ -42,8 +42,7 @@ const postEntry = async (
 
   const newEntry = new Entry({
     description,
-    createAt: Date.now(),
-
+    createdAt: Date.now(),
   });
 
   try {
