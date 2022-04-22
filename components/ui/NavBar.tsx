@@ -1,5 +1,6 @@
 import { FC, useContext } from 'react';
-import { AppBar, IconButton, Toolbar, Typography } from '@mui/material';
+import NexLink from 'next/link';
+import { AppBar, IconButton, Link, Toolbar, Typography } from '@mui/material';
 import { MenuOutlined } from '@mui/icons-material';
 import { UIContext } from '../../context/ui';
 
@@ -11,7 +12,11 @@ export const NavBar: FC = () => {
         <IconButton size={'large'} edge={'start'} onClick={openSideMenu}>
           <MenuOutlined/>
         </IconButton>
-        <Typography variant={'h6'}>OpenJira</Typography>
+        <NexLink href={'/'} passHref>
+          <Link underline={'none'} color={'white'}>
+            <Typography variant={'h6'}>OpenJira</Typography>
+          </Link>
+        </NexLink>
       </Toolbar>
     </AppBar>
   );

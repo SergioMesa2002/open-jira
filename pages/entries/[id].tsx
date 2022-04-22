@@ -1,5 +1,4 @@
-import { NextPage } from 'next';
-import { Layout } from '../../components/layouts';
+import { ChangeEvent, FC, useMemo, useState } from 'react';
 import {
   Button, capitalize,
   Card, CardActions, CardContent, CardHeader, FormControl, FormControlLabel,
@@ -7,13 +6,22 @@ import {
   RadioGroup,
   TextField
 } from '@mui/material';
+import { GetServerSideProps } from 'next';
+import { Layout } from '../../components/layouts';
 import { DeleteOutline, SaveOutlined } from '@mui/icons-material';
 import { EntryStatus } from '../../interfaces';
-import { ChangeEvent, useMemo, useState } from 'react';
+import { dbEntries } from '../../database';
+import { Entry } from '../../models';
+
 
 const validStatus: EntryStatus[] = ['pending', 'in-progress', 'finished'];
 
-const EntryPage: NextPage = () => {
+interface Props {
+  entry: Entry;
+}
+
+
+const EntryPage: FC<Props> = (props) => {
 
   const [inputValue, setInputValue] = useState('');
   const [status, setStatus] = useState<EntryStatus>('pending');
@@ -119,5 +127,29 @@ const EntryPage: NextPage = () => {
     </Layout>
   );
 };
+
+
+export const getServerSideProps: GetServerSideProps = async ({ params }) => {
+
+  const { id } = params as { id: string };
+
+  const entry = await dbEntries.getEntryById(id);
+
+  if (!entry) {
+    return ({
+      redirect: {
+        destination: '/',
+        permanent: false
+      },
+    });
+  }
+
+  return ({
+    props: {
+      entry
+    }
+  });
+};
+
 
 export default EntryPage;

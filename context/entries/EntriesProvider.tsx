@@ -52,7 +52,7 @@ export const EntriesProvider: FC = ({ children }) => {
       updateEntry,
       addNewEntry
     }}>
-      {children}`9
+      {children}
     </EntriesContext.Provider>
   );
 };
